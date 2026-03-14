@@ -6,18 +6,22 @@ These are instructions to build and run AERA.
 Prerequisites
 =============
 
-* Required: On Windows, Visual Studio
+* Required: On Windows, a Visual Studio installation with C++ build tools
+* Required: CMake
 * Required: Git
 * Required: The AERA code repository from https://github.com/IIIM-IS/AERA
 
 Following are the detailed steps for each platform to install the prerequisites.
 
 ## Windows
-To install Visual Studio, download and install Visual Studio Community Edition 2022 from
-https://visualstudio.microsoft.com/vs/community . (If you already have Visual Studio 2019 installed,
-this also works. Visual Studio 2017 is no longer supported.)
-In the installer, under "Desktop development with C++", check "Windows 10 SDK (10.018362.0)" and
-  "MSVC v141 - VS 2017 C++ build tools".
+Install either Visual Studio Community 2022 or Visual Studio Build Tools 2022 from
+https://visualstudio.microsoft.com/downloads/ .
+
+In the installer, enable the "Desktop development with C++" workload.
+
+Install CMake from https://cmake.org/download/ and make sure `cmake` is available in `PATH`.
+
+Optional: install `ninja` and add it to `PATH`. The scripted build will use it automatically when available.
 
 To install Git, download and install GitHub for Desktop from https://desktop.github.com .
 
@@ -27,41 +31,48 @@ It should be a recursive clone (which is the default).
 
 Build
 =====
-Launch Visual Studio and open the project `AERA.sln` from the cloned repository. E.g.:
-`C:\Users\Alice\Documents\GitHub\replicode\AERA.sln` .
-If a dialog box appears asking to retarget the Windows version, click cancel. 
+The Windows build is now CMake-first.
+
+The easiest path is to run:
+
+    powershell -ExecutionPolicy Bypass -File tests\smoke_hello_world.ps1
+
+That script configures, builds and smoke-tests the project through CMake. It will:
+
+* locate the local MSVC installation
+* load the 32-bit compiler environment required by the current codebase
+* use `Ninja` when available, otherwise `NMake Makefiles`
+* run `ctest` after the build
 
 ## `WITH_DETAIL_OID`
 
-To work with the AERA Visualizer, we must enable `WITH_DETAIL_OID` as follows. In the Visual Studio Solution Explorer,
-open the section for `CoreLibrary`. Double-click `base.h` . Uncomment the define for `WITH_DETAIL_OID`, so that
-the line is:
+To work with the AERA Visualizer, enable `WITH_DETAIL_OID` manually in [base.h](C:/Users/pille/Documents/GitHub/AERA/submodules/CoreLibrary/CoreLibrary/base.h) so that the line is:
 
     #define WITH_DETAIL_OID // Enable get_detail_oid() in every object.
 
 ## Compile
 
-In the Solution Configurations drop-down, make sure you select Release (unless you plan to debug AERA).
+If you want to run CMake manually instead of using the script, load the MSVC environment first and configure a Release build.
 
-In the Solution Options drop-down, make sure you select Win32.
+Example with `NMake`:
 
-On the Build menu, click Build Solution. (Don't worry about all the compiler warnings.)
+    cmake -S . -B build\smoke -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF
+    cmake --build build\smoke
+    ctest --test-dir build\smoke --output-on-failure
 
 Run
 ===
 
-To run, in Visual Studio on the Debug menu, select "Run Without Debugging". When first installed, the default
-is to run the program `main.replicode` which by default loads the program `hello.world.1.replicode`. 
-The output window should show some text including:
+After a successful build, the smoke test runs `AERA.exe` against a generated settings file. The output should contain:
 
     0s:50ms:0us: hello world 1
 
-To exit, close the output windows.
+The executable is generated under `build\smoke\bin\AERA.exe`.
 
 # settings.xml
 
 The `settings.xml` file specifies the program to run, AERA meta parameters, and other options for running AERA.
-To open `settings.xml`, in the Visual Studio Solution Explorer, open the section for `AERA`. Double click `settings.xml`
+The repository version lives at [settings.xml](C:/Users/pille/Documents/GitHub/AERA/AERA/settings.xml).
 
 This has many parameters which are documented at the bottom of the file. Following are some highlights.
 
