@@ -8,6 +8,7 @@ What remains active today:
 - `r_comp/`: Replicode compilation and decompilation
 - `r_exec/`: execution and reasoning runtime
 - `AERA/`: application entry point and baseline settings
+- `examples/`: Replicode assets kept outside the app/runtime code
 - `usr_operators/`: native operators loaded by the runtime
 - `tests/`: smoke-test entry points
 

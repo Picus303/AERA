@@ -10,10 +10,11 @@ Current completed steps:
 - removed legacy docs, demos, and old example sets
 - integrated `CoreLibrary` into the main repository
 - reduced the runtime baseline to `test_mem`
+- started separating runtime responsibilities into bootstrap, diagnostics, extensions, config, and IO layers
 
 Recommended next steps:
 
-1. Split `r_exec/` into clearer subdomains such as memory, jobs, controllers, monitors, and learning.
+1. Finish shrinking `test_mem` by separating its simulated environments into smaller units.
 2. Add 2-4 more characterization tests around compile/decompile and runtime output.
 3. Decide whether `usr_operators/` stays as a dynamic plugin boundary or moves in-process.
 4. Reduce historical headers and comments that still describe removed features.

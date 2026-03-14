@@ -3,7 +3,7 @@
 #ifndef _context_h
 #define _context_h
 
-#include "../r_code/atom.h"
+#include "../r_code/atoms/atom.h"
 #include "overlay.h"
 
 namespace r_exec {

@@ -1,7 +1,7 @@
 
 
 #include "auto_focus_callback.h"
-#include "../r_exec/auto_focus.h"
+#include "auto_focus.h"
 
 
 r_exec::Controller *auto_focus(r_code::_View *view) {

@@ -3,7 +3,7 @@
 #ifndef ipgm_context_h
 #define ipgm_context_h
 
-#include "../r_code/atom.h"
+#include "../r_code/atoms/atom.h"
 #include "../r_code/utils.h"
 #include "object.h"
 #include "_context.h"

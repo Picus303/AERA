@@ -3,7 +3,7 @@
 #ifndef usr_operators_types_h
 #define usr_operators_types_h
 
-#include "../r_exec/operator.h"
+#include "operator.h"
 
 typedef uint16 (*OpcodeRetriever)(const char *);
 

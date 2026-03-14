@@ -15,7 +15,7 @@
 #include <atomic>
 
 #include "../r_code/list.h"
-#include "../r_comp/segments.h"
+#include "../r_comp/model/segments.h"
 
 #include "../core/pipe.h"
 

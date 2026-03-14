@@ -4,7 +4,7 @@
 #define test_program_h
 
 #include "../types.h"
-#include "../../r_exec/overlay.h"
+#include "overlay.h"
 
 
 extern "C" {

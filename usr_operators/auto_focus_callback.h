@@ -3,7 +3,7 @@
 #ifndef auto_focus_proxy_h
 #define auto_focus_proxy_h
 
-#include "../r_exec/overlay.h"
+#include "overlay.h"
 
 
 extern "C" {

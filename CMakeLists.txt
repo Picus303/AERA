@@ -41,15 +41,46 @@ set(R_EXEC_DIR "${AERA_ROOT_DIR}/r_exec")
 set(AERA_APP_DIR "${AERA_ROOT_DIR}/AERA")
 set(USR_OPERATORS_DIR "${AERA_ROOT_DIR}/usr_operators")
 
+set(R_CODE_INCLUDE_DIRS
+  "${R_CODE_DIR}"
+  "${R_CODE_DIR}/atoms"
+  "${R_CODE_DIR}/images"
+)
+
+set(R_COMP_INCLUDE_DIRS
+  "${R_COMP_DIR}"
+  "${R_COMP_DIR}/frontend"
+  "${R_COMP_DIR}/model"
+  "${R_COMP_DIR}/backend"
+)
+
+set(R_EXEC_INCLUDE_DIRS
+  "${R_EXEC_DIR}"
+  "${R_EXEC_DIR}/bootstrap"
+  "${R_EXEC_DIR}/controllers"
+  "${R_EXEC_DIR}/diagnostics"
+  "${R_EXEC_DIR}/extensions"
+  "${R_EXEC_DIR}/monitoring"
+  "${R_EXEC_DIR}/scheduling"
+  "${R_EXEC_DIR}/overlays"
+  "${R_EXEC_DIR}/learning"
+)
+
+set(AERA_APP_INCLUDE_DIRS
+  "${AERA_APP_DIR}/bootstrap"
+  "${AERA_APP_DIR}/config"
+  "${AERA_APP_DIR}/io"
+)
+
 add_library(aera_project_options INTERFACE)
 target_compile_features(aera_project_options INTERFACE cxx_std_17)
 target_include_directories(
   aera_project_options
   INTERFACE
     "${CORELIBRARY_DIR}"
-    "${R_CODE_DIR}"
-    "${R_COMP_DIR}"
-    "${R_EXEC_DIR}"
+    ${R_CODE_INCLUDE_DIRS}
+    ${R_COMP_INCLUDE_DIRS}
+    ${R_EXEC_INCLUDE_DIRS}
 )
 
 if(WIN32)
@@ -69,73 +100,74 @@ target_compile_definitions(CoreLibrary PRIVATE CORELIBRARY_EXPORTS)
 set_target_properties(CoreLibrary PROPERTIES OUTPUT_NAME "CoreLibrary")
 
 set(R_CODE_SOURCES
-  "${R_CODE_DIR}/atom.cpp"
+  "${R_CODE_DIR}/atoms/atom.cpp"
   "${R_CODE_DIR}/code_utils.cpp"
-  "${R_CODE_DIR}/image.cpp"
-  "${R_CODE_DIR}/image_impl.cpp"
+  "${R_CODE_DIR}/images/image.cpp"
+  "${R_CODE_DIR}/images/image_impl.cpp"
   "${R_CODE_DIR}/object.cpp"
   "${R_CODE_DIR}/r_code.cpp"
 )
 
 add_library(r_code SHARED ${R_CODE_SOURCES})
 target_link_libraries(r_code PUBLIC aera_project_options CoreLibrary)
-target_include_directories(r_code PUBLIC "${R_CODE_DIR}")
+target_include_directories(r_code PUBLIC ${R_CODE_INCLUDE_DIRS})
 target_compile_definitions(r_code PRIVATE R_CODE_EXPORTS BUILD_DLL)
 set_target_properties(r_code PROPERTIES OUTPUT_NAME "r_code")
 
 set(R_COMP_SOURCES
-  "${R_COMP_DIR}/class.cpp"
-  "${R_COMP_DIR}/compiler.cpp"
-  "${R_COMP_DIR}/decompiler.cpp"
-  "${R_COMP_DIR}/preprocessor.cpp"
-  "${R_COMP_DIR}/r_comp.cpp"
-  "${R_COMP_DIR}/segments.cpp"
-  "${R_COMP_DIR}/structure_member.cpp"
+  "${R_COMP_DIR}/model/class.cpp"
+  "${R_COMP_DIR}/frontend/compiler.cpp"
+  "${R_COMP_DIR}/backend/decompiler.cpp"
+  "${R_COMP_DIR}/frontend/preprocessor.cpp"
+  "${R_COMP_DIR}/frontend/r_comp.cpp"
+  "${R_COMP_DIR}/model/segments.cpp"
+  "${R_COMP_DIR}/model/structure_member.cpp"
 )
 
 add_library(r_comp SHARED ${R_COMP_SOURCES})
 target_link_libraries(r_comp PUBLIC aera_project_options CoreLibrary r_code)
-target_include_directories(r_comp PUBLIC "${R_COMP_DIR}")
+target_include_directories(r_comp PUBLIC ${R_COMP_INCLUDE_DIRS})
 set_target_properties(r_comp PROPERTIES OUTPUT_NAME "r_comp")
 
 set(R_EXEC_SOURCES
-  "${R_EXEC_DIR}/ast_controller.cpp"
+  "${R_EXEC_DIR}/bootstrap/init.cpp"
+  "${R_EXEC_DIR}/controllers/ast_controller.cpp"
   "${R_EXEC_DIR}/auto_focus.cpp"
   "${R_EXEC_DIR}/binding_map.cpp"
-  "${R_EXEC_DIR}/callbacks.cpp"
   "${R_EXEC_DIR}/_context.cpp"
   "${R_EXEC_DIR}/context.cpp"
-  "${R_EXEC_DIR}/cpp_programs.cpp"
-  "${R_EXEC_DIR}/cst_controller.cpp"
+  "${R_EXEC_DIR}/controllers/cst_controller.cpp"
+  "${R_EXEC_DIR}/diagnostics/runtime_diagnostics.cpp"
+  "${R_EXEC_DIR}/extensions/callbacks.cpp"
+  "${R_EXEC_DIR}/extensions/cpp_programs.cpp"
   "${R_EXEC_DIR}/factory.cpp"
-  "${R_EXEC_DIR}/g_monitor.cpp"
+  "${R_EXEC_DIR}/monitoring/g_monitor.cpp"
   "${R_EXEC_DIR}/group.cpp"
-  "${R_EXEC_DIR}/guard_builder.cpp"
+  "${R_EXEC_DIR}/controllers/guard_builder.cpp"
   "${R_EXEC_DIR}/hlp_context.cpp"
-  "${R_EXEC_DIR}/hlp_controller.cpp"
-  "${R_EXEC_DIR}/hlp_overlay.cpp"
-  "${R_EXEC_DIR}/init.cpp"
-  "${R_EXEC_DIR}/mdl_controller.cpp"
+  "${R_EXEC_DIR}/controllers/hlp_controller.cpp"
+  "${R_EXEC_DIR}/overlays/hlp_overlay.cpp"
+  "${R_EXEC_DIR}/controllers/mdl_controller.cpp"
   "${R_EXEC_DIR}/mem.cpp"
   "${R_EXEC_DIR}/model_base.cpp"
-  "${R_EXEC_DIR}/monitor.cpp"
+  "${R_EXEC_DIR}/monitoring/monitor.cpp"
   "${R_EXEC_DIR}/opcodes.cpp"
   "${R_EXEC_DIR}/operator.cpp"
-  "${R_EXEC_DIR}/overlay.cpp"
-  "${R_EXEC_DIR}/pattern_extractor.cpp"
-  "${R_EXEC_DIR}/pgm_controller.cpp"
-  "${R_EXEC_DIR}/pgm_overlay.cpp"
-  "${R_EXEC_DIR}/p_monitor.cpp"
-  "${R_EXEC_DIR}/reduction_core.cpp"
-  "${R_EXEC_DIR}/reduction_job.cpp"
-  "${R_EXEC_DIR}/time_core.cpp"
-  "${R_EXEC_DIR}/time_job.cpp"
+  "${R_EXEC_DIR}/overlays/overlay.cpp"
+  "${R_EXEC_DIR}/learning/pattern_extractor.cpp"
+  "${R_EXEC_DIR}/controllers/pgm_controller.cpp"
+  "${R_EXEC_DIR}/overlays/pgm_overlay.cpp"
+  "${R_EXEC_DIR}/monitoring/p_monitor.cpp"
+  "${R_EXEC_DIR}/scheduling/reduction_core.cpp"
+  "${R_EXEC_DIR}/scheduling/reduction_job.cpp"
+  "${R_EXEC_DIR}/scheduling/time_core.cpp"
+  "${R_EXEC_DIR}/scheduling/time_job.cpp"
   "${R_EXEC_DIR}/view.cpp"
 )
 
 add_library(r_exec SHARED ${R_EXEC_SOURCES})
 target_link_libraries(r_exec PUBLIC aera_project_options CoreLibrary r_code r_comp)
-target_include_directories(r_exec PUBLIC "${R_EXEC_DIR}")
+target_include_directories(r_exec PUBLIC ${R_EXEC_INCLUDE_DIRS})
 target_compile_definitions(r_exec PRIVATE EXECUTIVE_EXPORTS)
 set_target_properties(r_exec PROPERTIES OUTPUT_NAME "r_exec")
 
@@ -160,19 +192,21 @@ target_include_directories(
 set_target_properties(usr_operators PROPERTIES OUTPUT_NAME "usr_operators")
 
 set(AERA_APP_SOURCES
-  "${AERA_APP_DIR}/AERA_main.cpp"
-  "${AERA_APP_DIR}/main.cpp"
-  "${AERA_APP_DIR}/test_mem.cpp"
+  "${AERA_APP_DIR}/bootstrap/AERA_main.cpp"
+  "${AERA_APP_DIR}/bootstrap/runtime_exports.cpp"
+  "${AERA_APP_DIR}/bootstrap/runtime_runner.cpp"
+  "${AERA_APP_DIR}/config/settings.cpp"
+  "${AERA_APP_DIR}/io/test_mem.cpp"
 )
 
 add_executable(aera ${AERA_APP_SOURCES})
 target_link_libraries(aera PRIVATE aera_project_options CoreLibrary r_code r_comp r_exec)
-target_include_directories(aera PRIVATE "${AERA_APP_DIR}")
+target_include_directories(aera PRIVATE "${AERA_APP_DIR}" ${AERA_APP_INCLUDE_DIRS})
 set_target_properties(aera PROPERTIES OUTPUT_NAME "AERA")
 add_dependencies(aera usr_operators)
 
-file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/AERA/replicode_v1.2/user.classes.replicode" AERA_SMOKE_USER_CLASSES)
-file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/AERA/replicode_v1.2/main.replicode" AERA_SMOKE_SOURCE_FILE)
+file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/examples/replicode/user.classes.replicode" AERA_SMOKE_USER_CLASSES)
+file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/examples/replicode/main.replicode" AERA_SMOKE_SOURCE_FILE)
 set(AERA_SMOKE_USER_OPERATOR_FILENAME "${CMAKE_SHARED_LIBRARY_PREFIX}usr_operators${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 configure_file(

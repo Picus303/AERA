@@ -2,7 +2,7 @@
 
 #include "usr_operators.h"
 
-#include "../r_exec/init.h"
+#include "init.h"
 #include "auto_focus_callback.h"
 
 #include <iostream>

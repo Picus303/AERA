@@ -2,7 +2,7 @@
 
 #include "test_program.h"
 
-#include "../r_exec/mem.h"
+#include "mem.h"
 
 using namespace r_code;
 
