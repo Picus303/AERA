@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <set>
-#include "../submodules/CoreLibrary/CoreLibrary/types.h"
+#include "../core/types.h"
 
 #undef THIS
 

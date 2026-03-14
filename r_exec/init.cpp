@@ -164,15 +164,9 @@ PipeOStream PipeOStream::NullStream_;
 
 void PipeOStream::Open(uint8 count) {
 
-#ifdef WINDOWS
   for (uint8 i = 0; i < count; ++i) {
-
-    PipeOStream *p = new PipeOStream();
-    p->init();
-
-    Streams_.push_back(p);
+    Streams_.push_back(new PipeOStream());
   }
-#endif
 }
 
 void PipeOStream::Close() {
@@ -186,10 +180,8 @@ void PipeOStream::Close() {
 
 PipeOStream &PipeOStream::Get(uint8 id) {
 
-#ifdef WINDOWS
   if (id < Streams_.size())
     return *Streams_[id];
-#endif
   return NullStream_;
 }
 
@@ -200,49 +192,12 @@ PipeOStream::PipeOStream() : std::ostream(NULL)
 {
 }
 
-#ifdef WINDOWS
-void PipeOStream::init() {
-
-  SECURITY_ATTRIBUTES saAttr;
-  saAttr.nLength = sizeof(saAttr);
-  saAttr.bInheritHandle = true;
-  saAttr.lpSecurityDescriptor = NULL;
-
-  CreatePipe(&pipe_read_, &pipe_write_, &saAttr, 0);
-
-  STARTUPINFO si;
-  PROCESS_INFORMATION pi;
-
-  ZeroMemory(&si, sizeof(si));
-  si.cb = sizeof(si);
-  ZeroMemory(&pi, sizeof(pi));
-
-  char handle[255];
-  itoa((int)pipe_read_, handle, 10);
-  std::string command("output_window.exe ");
-  command += std::string(handle);
-
-  CreateProcess(NULL, // no module name (use command line)
-    const_cast<char *>(command.c_str()), // command line
-    NULL, // process handle not inheritable
-    NULL, // thread handle not inheritable
-    true, // handle inheritance
-    CREATE_NEW_CONSOLE, // creation flags
-    NULL, // use parent's environment block
-    NULL, // use parent's starting directory
-    &si, // pointer to STARTUPINFO structure
-    &pi); // pointer to PROCESS_INFORMATION structure
-}
-#endif
-
 PipeOStream::~PipeOStream() {
 
 #ifdef WINDOWS
   if (pipe_read_ == 0)
     return;
 
-  std::string stop("close_output_window");
-  *this << stop;
   CloseHandle(pipe_read_);
   CloseHandle(pipe_write_);
 #endif

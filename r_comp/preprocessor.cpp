@@ -87,7 +87,7 @@
 #include <filesystem>
 #include "preprocessor.h"
 #include "compiler.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 namespace fs = std::filesystem;
 
 using namespace std;

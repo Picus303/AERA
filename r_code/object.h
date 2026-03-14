@@ -11,7 +11,7 @@
 #include "list.h"
 #include "replicode_defs.h"
 
-#include "../submodules/CoreLibrary/CoreLibrary/base.h"
+#include "../core/base.h"
 #include "utils.h"
 
 

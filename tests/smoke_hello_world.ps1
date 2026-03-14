@@ -77,7 +77,7 @@ if (!(Test-Path $buildDir)) {
 
 Write-Host "Using generator: $selectedGenerator"
 Write-Host "Configuring CMake"
-Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" -S `"$repoRoot`" -B `"$buildDir`" -G `"$selectedGenerator`" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF"
+Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" -S `"$repoRoot`" -B `"$buildDir`" -G `"$selectedGenerator`" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON"
 
 Write-Host "Building"
 Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" --build `"$buildDir`""

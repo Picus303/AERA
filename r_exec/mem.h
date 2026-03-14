@@ -17,7 +17,7 @@
 #include "../r_code/list.h"
 #include "../r_comp/segments.h"
 
-#include "../submodules/CoreLibrary/CoreLibrary/pipe.h"
+#include "../core/pipe.h"
 
 
 namespace r_exec {

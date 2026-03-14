@@ -84,8 +84,6 @@
 //_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
 
 #include "decompiler.h"
-#include "IODevices/TCP/tcp_io_device.h"
-#include "IODevices/video_screen/video_screen_io_device.h"
 #include "test_mem.h"
 #include "init.h"
 #include "image_impl.h"
@@ -316,35 +314,17 @@ int32 start_AERA(const char* file_name, const char* decompiled_file_name) {
 
     r_comp::Image *image;
 
+    if (settings.io_device_.compare("test_mem") != 0) {
+      std::cerr << "> Error: unsupported IODevice \"" << settings.io_device_
+        << "\". The current baseline only supports test_mem.\n";
+      return 4;
+    }
+
     r_exec::_Mem* mem;
-    if (settings.io_device_.compare("test_mem") == 0) {
-      if (settings.get_objects_)
-        mem = new TestMem<r_exec::LObject, r_exec::MemStatic>();
-      else
-        mem = new TestMem<r_exec::LObject, r_exec::MemVolatile>();
-    }
-    else if (settings.io_device_.compare("tcp_io_device") == 0) {
-      int err = 0;
-      if (settings.get_objects_) {
-        mem = new tcp_io_device::TcpIoDevice<r_exec::LObject, r_exec::MemStatic>(settings.number_of_servers_, settings.number_of_clients_, settings.server_configurations_, settings.client_configurations_);
-        err = static_cast<tcp_io_device::TcpIoDevice<r_exec::LObject, r_exec::MemStatic>*>(mem)->initTCP();
-      }
-      else {
-        mem = new tcp_io_device::TcpIoDevice<r_exec::LObject, r_exec::MemVolatile>(settings.number_of_servers_, settings.number_of_clients_, settings.server_configurations_, settings.client_configurations_);
-        err = static_cast<tcp_io_device::TcpIoDevice<r_exec::LObject, r_exec::MemVolatile>*>(mem)->initTCP();
-      }
-      if (err != 0) {
-        cout << "ERROR: Could not connect to a TCP client" << endl;
-        delete mem;
-        return err;
-      }
-    }
-    else if (settings.io_device_.compare("video_screen") == 0) {
-      if (settings.get_objects_)
-        mem = new video_screen::VideoScreenIoDevice<r_exec::LObject, r_exec::MemStatic>();
-      else
-        mem = new video_screen::VideoScreenIoDevice<r_exec::LObject, r_exec::MemVolatile>();
-    }
+    if (settings.get_objects_)
+      mem = new TestMem<r_exec::LObject, r_exec::MemStatic>();
+    else
+      mem = new TestMem<r_exec::LObject, r_exec::MemVolatile>();
 
     if (runtime_output_stream.is_open())
       // Use the debug stream from settings.xml.

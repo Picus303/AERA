@@ -3,8 +3,8 @@
 #ifndef mem_output_h
 #define mem_output_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/base.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/base.h"
+#include "../core/utils.h"
 
 namespace r_exec {
 

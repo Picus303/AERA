@@ -3,7 +3,7 @@
 #ifndef r_exec_object_h
 #define r_exec_object_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 #include "../r_code/object.h"
 #include "view.h"
 #include "opcodes.h"

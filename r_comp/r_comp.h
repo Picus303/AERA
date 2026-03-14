@@ -3,7 +3,7 @@
 #ifndef r_comp_h
 #define r_comp_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/types.h"
+#include "../core/types.h"
 
 
 extern "C" {

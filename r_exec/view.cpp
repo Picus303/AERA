@@ -2,7 +2,7 @@
 
 #include "controller.h"
 #include "view.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 #include "group.h"
 #include "mem.h"
 

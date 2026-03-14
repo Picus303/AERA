@@ -3,7 +3,7 @@
 #ifndef reduction_core_h
 #define reduction_core_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 #include "reduction_job.h"
 
 

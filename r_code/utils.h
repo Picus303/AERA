@@ -4,8 +4,8 @@
 #define r_code_utils_h
 
 #include "atom.h"
-#include "../submodules/CoreLibrary/CoreLibrary/base.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/base.h"
+#include "../core/utils.h"
 
 
 namespace r_code {

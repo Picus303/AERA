@@ -3,7 +3,7 @@
 #ifndef init_h
 #define init_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 
 #include "../r_code/list.h"
 
@@ -61,12 +61,10 @@ public:
   void decompile();
 };
 
-// Spawns an instance of output_window.exe (see output_window project) and opens a pipe between the main process and output_window.
-// Temporary solution:
-// (a) not portable,
-// (b) shall be defined in CoreLibrary instead of here,
-// (c) the stream pool management (PipeOStream::Open(), PipeOStream::Close() and PipeOStream::Get()) shall be decoupled from this implementation (it's an IDE feature),
-// (d) PipeOStream shall be based on std::ostringstream instead of std::ostream with a refined std::stringbuf (override sync() to write in the pipe).
+// Legacy debug windows have been removed from the repository.
+// PipeOStream now behaves as a sink stream placeholder so that the
+// existing runtime tracing code can stay intact while the diagnostics
+// layer is rebuilt later.
 class r_exec_dll PipeOStream :
   public std::ostream {
 private:
@@ -76,8 +74,6 @@ private:
 #ifdef WINDOWS
   HANDLE pipe_read_;
   HANDLE pipe_write_;
-
-  void init(); // create one child process and a pipe.
 #endif
   PipeOStream();
 public:

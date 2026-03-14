@@ -85,7 +85,7 @@
 #ifndef main_h
 #define main_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/types.h"
+#include "../core/types.h"
 
 core::int32 start_AERA(const char* file_name, const char* decompiled_file_name);
 

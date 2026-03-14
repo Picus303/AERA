@@ -89,7 +89,7 @@
 #include "init.h"
 #include "opcodes.h"
 #include "group.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 #include "../r_code/utils.h"
 #include <math.h>
 #include "hlp_context.h"

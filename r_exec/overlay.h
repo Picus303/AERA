@@ -3,8 +3,8 @@
 #ifndef overlay_h
 #define overlay_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/base.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/base.h"
+#include "../core/utils.h"
 #include "../r_code/object.h"
 #include "controller.h"
 #include "reduction_job.h"

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <regex>
 #include "decompiler.h"
-#include "../submodules/CoreLibrary/CoreLibrary/utils.h"
+#include "../core/utils.h"
 
 using namespace std;
 using namespace std::chrono;

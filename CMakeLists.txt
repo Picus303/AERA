@@ -9,9 +9,6 @@ project(
 
 include(CTest)
 
-option(AERA_BUILD_OUTPUT_WINDOW "Build the legacy output_window helper" ON)
-option(AERA_ENABLE_PROTOBUF "Enable TCP protobuf support" OFF)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -37,7 +34,7 @@ if(CMAKE_CONFIGURATION_TYPES)
 endif()
 
 set(AERA_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-set(CORELIBRARY_DIR "${AERA_ROOT_DIR}/submodules/CoreLibrary/CoreLibrary")
+set(CORELIBRARY_DIR "${AERA_ROOT_DIR}/core")
 set(R_CODE_DIR "${AERA_ROOT_DIR}/r_code")
 set(R_COMP_DIR "${AERA_ROOT_DIR}/r_comp")
 set(R_EXEC_DIR "${AERA_ROOT_DIR}/r_exec")
@@ -57,10 +54,6 @@ target_include_directories(
 
 if(WIN32)
   target_link_libraries(aera_project_options INTERFACE ws2_32)
-endif()
-
-if(AERA_ENABLE_PROTOBUF)
-  find_package(Protobuf REQUIRED)
 endif()
 
 set(CORELIBRARY_SOURCES
@@ -170,46 +163,13 @@ set(AERA_APP_SOURCES
   "${AERA_APP_DIR}/AERA_main.cpp"
   "${AERA_APP_DIR}/main.cpp"
   "${AERA_APP_DIR}/test_mem.cpp"
-  "${AERA_APP_DIR}/IODevices/TCP/tcp_io_device.cpp"
-  "${AERA_APP_DIR}/IODevices/video_screen/video_screen.cpp"
-  "${AERA_APP_DIR}/IODevices/video_screen/video_screen_io_device.cpp"
 )
-
-if(AERA_ENABLE_PROTOBUF)
-  list(APPEND AERA_APP_SOURCES
-    "${AERA_APP_DIR}/IODevices/TCP/AERA_Protobuf/tcp_connection.cpp"
-    "${AERA_APP_DIR}/IODevices/TCP/AERA_Protobuf/tcp_data_message.pb.cc"
-  )
-endif()
 
 add_executable(aera ${AERA_APP_SOURCES})
 target_link_libraries(aera PRIVATE aera_project_options CoreLibrary r_code r_comp r_exec)
-target_include_directories(
-  aera
-  PRIVATE
-    "${AERA_APP_DIR}"
-    "${AERA_APP_DIR}/IODevices/TCP"
-    "${AERA_APP_DIR}/IODevices/video_screen"
-)
-target_compile_definitions(aera PRIVATE $<$<BOOL:${AERA_ENABLE_PROTOBUF}>:ENABLE_PROTOBUF>)
-target_compile_definitions(usr_operators PRIVATE $<$<BOOL:${AERA_ENABLE_PROTOBUF}>:ENABLE_PROTOBUF>)
+target_include_directories(aera PRIVATE "${AERA_APP_DIR}")
 set_target_properties(aera PROPERTIES OUTPUT_NAME "AERA")
 add_dependencies(aera usr_operators)
-
-if(AERA_ENABLE_PROTOBUF)
-  target_include_directories(
-    aera
-    PRIVATE
-      "${AERA_APP_DIR}/IODevices/TCP/AERA_Protobuf"
-  )
-  target_link_libraries(aera PRIVATE protobuf::libprotobuf)
-endif()
-
-if(AERA_BUILD_OUTPUT_WINDOW)
-  add_executable(output_window "${AERA_ROOT_DIR}/output_window/main.cpp")
-  target_link_libraries(output_window PRIVATE aera_project_options CoreLibrary)
-  set_target_properties(output_window PROPERTIES OUTPUT_NAME "output_window")
-endif()
 
 file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/AERA/replicode_v1.2/user.classes.replicode" AERA_SMOKE_USER_CLASSES)
 file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/AERA/replicode_v1.2/main.replicode" AERA_SMOKE_SOURCE_FILE)

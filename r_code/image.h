@@ -3,7 +3,7 @@
 #ifndef r_code_image_h
 #define r_code_image_h
 
-#include "../submodules/CoreLibrary/CoreLibrary/types.h"
+#include "../core/types.h"
 
 #include <fstream>
 
