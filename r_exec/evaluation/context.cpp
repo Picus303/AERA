@@ -3,8 +3,8 @@
 #include "context.h"
 #include "pgm_overlay.h"
 #include "operator.h"
-#include "opcodes.h"
-#include "mem.h"
+#include "metadata/opcodes.h"
+#include "runtime/mem.h"
 
 
 using namespace std;

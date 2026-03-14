@@ -5,7 +5,7 @@
 
 #include "hlp_overlay.h"
 #include "hlp_controller.h"
-#include "factory.h"
+#include "construction/factory.h"
 
 
 namespace r_exec {

@@ -4,7 +4,7 @@
 #define binding_map_h
 
 #include "controller.h"
-#include "object.h"
+#include "runtime/object.h"
 #include "dll.h"
 
 

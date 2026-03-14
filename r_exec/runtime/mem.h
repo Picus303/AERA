@@ -7,17 +7,17 @@
 #include "reduction_core.h"
 #include "time_core.h"
 #include "pgm_overlay.h"
-#include "binding_map.h"
+#include "evaluation/binding_map.h"
 #include "dll.h"
 
 #include <list>
 #include <deque>
 #include <atomic>
 
-#include "../r_code/list.h"
-#include "../r_comp/model/segments.h"
+#include "../../r_code/list.h"
+#include "../../r_comp/model/segments.h"
 
-#include "../core/pipe.h"
+#include "../../core/pipe.h"
 
 
 namespace r_exec {

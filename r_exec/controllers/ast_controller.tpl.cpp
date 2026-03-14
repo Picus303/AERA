@@ -3,7 +3,7 @@
 #include "ast_controller.h"
 #include "mem.h"
 #include "factory.h"
-#include "auto_focus.h"
+#include "attention/auto_focus.h"
 
 using namespace r_code;
 

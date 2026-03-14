@@ -2,10 +2,10 @@
 
 #include "operator.h"
 #include "context.h"
-#include "mem.h"
+#include "runtime/mem.h"
 #include "init.h"
-#include "opcodes.h"
-#include "group.h"
+#include "metadata/opcodes.h"
+#include "runtime/group.h"
 #include "../core/utils.h"
 #include "../r_code/utils.h"
 #include <math.h>

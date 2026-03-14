@@ -3,7 +3,7 @@
 #include "operators.h"
 
 #include "init.h"
-#include "mem.h"
+#include "runtime/mem.h"
 
 static uint16 Vec3Opcode;
 static uint16 Vec2Opcode;

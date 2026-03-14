@@ -4,9 +4,9 @@
 #define reduction_job_h
 
 #include "../r_code/utils.h"
-#include "object.h"
-#include "mem_output.h"
-#include "view.h"
+#include "runtime/mem_output.h"
+#include "runtime/object.h"
+#include "runtime/view.h"
 
 
 namespace r_exec {

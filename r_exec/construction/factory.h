@@ -3,9 +3,9 @@
 #ifndef factory_h
 #define factory_h
 
-#include "../r_code/utils.h"
-#include "binding_map.h"
-#include "overlay.h"
+#include "../../r_code/utils.h"
+#include "evaluation/binding_map.h"
+#include "overlays/overlay.h"
 #include "dll.h"
 
 

@@ -56,12 +56,17 @@ set(R_COMP_INCLUDE_DIRS
 
 set(R_EXEC_INCLUDE_DIRS
   "${R_EXEC_DIR}"
+  "${R_EXEC_DIR}/attention"
   "${R_EXEC_DIR}/bootstrap"
+  "${R_EXEC_DIR}/construction"
   "${R_EXEC_DIR}/controllers"
   "${R_EXEC_DIR}/diagnostics"
+  "${R_EXEC_DIR}/evaluation"
   "${R_EXEC_DIR}/extensions"
   "${R_EXEC_DIR}/monitoring"
+  "${R_EXEC_DIR}/metadata"
   "${R_EXEC_DIR}/scheduling"
+  "${R_EXEC_DIR}/runtime"
   "${R_EXEC_DIR}/overlays"
   "${R_EXEC_DIR}/learning"
 )
@@ -99,6 +104,10 @@ target_include_directories(CoreLibrary PUBLIC "${CORELIBRARY_DIR}")
 target_compile_definitions(CoreLibrary PRIVATE CORELIBRARY_EXPORTS)
 set_target_properties(CoreLibrary PROPERTIES OUTPUT_NAME "CoreLibrary")
 
+add_library(aera_config STATIC "${AERA_APP_DIR}/config/settings.cpp")
+target_link_libraries(aera_config PUBLIC aera_project_options CoreLibrary)
+target_include_directories(aera_config PUBLIC "${AERA_APP_DIR}/config")
+
 set(R_CODE_SOURCES
   "${R_CODE_DIR}/atoms/atom.cpp"
   "${R_CODE_DIR}/code_utils.cpp"
@@ -130,39 +139,39 @@ target_include_directories(r_comp PUBLIC ${R_COMP_INCLUDE_DIRS})
 set_target_properties(r_comp PROPERTIES OUTPUT_NAME "r_comp")
 
 set(R_EXEC_SOURCES
+  "${R_EXEC_DIR}/attention/auto_focus.cpp"
   "${R_EXEC_DIR}/bootstrap/init.cpp"
+  "${R_EXEC_DIR}/construction/factory.cpp"
   "${R_EXEC_DIR}/controllers/ast_controller.cpp"
-  "${R_EXEC_DIR}/auto_focus.cpp"
-  "${R_EXEC_DIR}/binding_map.cpp"
-  "${R_EXEC_DIR}/_context.cpp"
-  "${R_EXEC_DIR}/context.cpp"
   "${R_EXEC_DIR}/controllers/cst_controller.cpp"
   "${R_EXEC_DIR}/diagnostics/runtime_diagnostics.cpp"
+  "${R_EXEC_DIR}/evaluation/_context.cpp"
+  "${R_EXEC_DIR}/evaluation/binding_map.cpp"
+  "${R_EXEC_DIR}/evaluation/context.cpp"
+  "${R_EXEC_DIR}/evaluation/hlp_context.cpp"
+  "${R_EXEC_DIR}/evaluation/operator.cpp"
   "${R_EXEC_DIR}/extensions/callbacks.cpp"
   "${R_EXEC_DIR}/extensions/cpp_programs.cpp"
-  "${R_EXEC_DIR}/factory.cpp"
   "${R_EXEC_DIR}/monitoring/g_monitor.cpp"
-  "${R_EXEC_DIR}/group.cpp"
   "${R_EXEC_DIR}/controllers/guard_builder.cpp"
-  "${R_EXEC_DIR}/hlp_context.cpp"
   "${R_EXEC_DIR}/controllers/hlp_controller.cpp"
   "${R_EXEC_DIR}/overlays/hlp_overlay.cpp"
   "${R_EXEC_DIR}/controllers/mdl_controller.cpp"
-  "${R_EXEC_DIR}/mem.cpp"
-  "${R_EXEC_DIR}/model_base.cpp"
+  "${R_EXEC_DIR}/metadata/opcodes.cpp"
   "${R_EXEC_DIR}/monitoring/monitor.cpp"
-  "${R_EXEC_DIR}/opcodes.cpp"
-  "${R_EXEC_DIR}/operator.cpp"
   "${R_EXEC_DIR}/overlays/overlay.cpp"
   "${R_EXEC_DIR}/learning/pattern_extractor.cpp"
   "${R_EXEC_DIR}/controllers/pgm_controller.cpp"
   "${R_EXEC_DIR}/overlays/pgm_overlay.cpp"
   "${R_EXEC_DIR}/monitoring/p_monitor.cpp"
+  "${R_EXEC_DIR}/runtime/group.cpp"
+  "${R_EXEC_DIR}/runtime/mem.cpp"
+  "${R_EXEC_DIR}/runtime/model_base.cpp"
+  "${R_EXEC_DIR}/runtime/view.cpp"
   "${R_EXEC_DIR}/scheduling/reduction_core.cpp"
   "${R_EXEC_DIR}/scheduling/reduction_job.cpp"
   "${R_EXEC_DIR}/scheduling/time_core.cpp"
   "${R_EXEC_DIR}/scheduling/time_job.cpp"
-  "${R_EXEC_DIR}/view.cpp"
 )
 
 add_library(r_exec SHARED ${R_EXEC_SOURCES})
@@ -195,12 +204,11 @@ set(AERA_APP_SOURCES
   "${AERA_APP_DIR}/bootstrap/AERA_main.cpp"
   "${AERA_APP_DIR}/bootstrap/runtime_exports.cpp"
   "${AERA_APP_DIR}/bootstrap/runtime_runner.cpp"
-  "${AERA_APP_DIR}/config/settings.cpp"
   "${AERA_APP_DIR}/io/test_mem.cpp"
 )
 
 add_executable(aera ${AERA_APP_SOURCES})
-target_link_libraries(aera PRIVATE aera_project_options CoreLibrary r_code r_comp r_exec)
+target_link_libraries(aera PRIVATE aera_project_options CoreLibrary aera_config r_code r_comp r_exec)
 target_include_directories(aera PRIVATE "${AERA_APP_DIR}" ${AERA_APP_INCLUDE_DIRS})
 set_target_properties(aera PROPERTIES OUTPUT_NAME "AERA")
 add_dependencies(aera usr_operators)
@@ -215,7 +223,44 @@ configure_file(
   @ONLY
 )
 
+configure_file(
+  "${AERA_ROOT_DIR}/tests/invalid_settings.xml.in"
+  "${CMAKE_BINARY_DIR}/invalid_settings.xml"
+  @ONLY
+)
+
+add_executable(
+  settings_characterization
+  "${AERA_ROOT_DIR}/tests/settings_characterization.cpp"
+)
+target_link_libraries(settings_characterization PRIVATE aera_project_options aera_config)
+target_include_directories(settings_characterization PRIVATE ${AERA_APP_INCLUDE_DIRS})
+
 if(BUILD_TESTING)
+  add_test(
+    NAME settings_generated_smoke
+    COMMAND
+      "$<TARGET_FILE:settings_characterization>"
+      valid_generated
+      "${CMAKE_BINARY_DIR}/smoke_settings.xml"
+  )
+
+  add_test(
+    NAME settings_repo_layout
+    COMMAND
+      "$<TARGET_FILE:settings_characterization>"
+      repo_layout
+      "${AERA_ROOT_DIR}/AERA/settings.xml"
+  )
+
+  add_test(
+    NAME settings_invalid_missing_attribute
+    COMMAND
+      "$<TARGET_FILE:settings_characterization>"
+      invalid_missing_attribute
+      "${CMAKE_BINARY_DIR}/invalid_settings.xml"
+  )
+
   add_test(
     NAME smoke_hello_world
     COMMAND

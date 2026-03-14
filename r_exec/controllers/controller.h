@@ -6,7 +6,7 @@
 #include "../core/base.h"
 #include "../core/utils.h"
 #include "../r_code/object.h"
-#include "mem_output.h"
+#include "runtime/mem_output.h"
 #include "dll.h"
 #include "reduction_job.h"
 

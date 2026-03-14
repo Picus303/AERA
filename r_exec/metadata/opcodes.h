@@ -3,7 +3,7 @@
 #ifndef opcodes_h
 #define opcodes_h
 
-#include "../core/types.h"
+#include "../../core/types.h"
 #include "dll.h"
 
 

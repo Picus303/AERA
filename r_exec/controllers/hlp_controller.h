@@ -6,7 +6,7 @@
 #include "overlay.h"
 #include "binding_map.h"
 #include "g_monitor.h"
-#include "group.h"
+#include "runtime/group.h"
 #include "init.h"
 
 

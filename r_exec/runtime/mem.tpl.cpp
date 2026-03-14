@@ -1,12 +1,12 @@
 
 
 #include "init.h"
-#include "binding_map.h"
-#include "../r_code/replicode_defs.h"
-#include "operator.h"
-#include "factory.h"
+#include "construction/factory.h"
+#include "evaluation/binding_map.h"
+#include "evaluation/operator.h"
 #include "cpp_programs.h"
-#include "../r_code/utils.h"
+#include "../../r_code/replicode_defs.h"
+#include "../../r_code/utils.h"
 #include <math.h>
 
 

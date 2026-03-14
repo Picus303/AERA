@@ -6,8 +6,8 @@
 #include "hlp_overlay.h"
 #include "hlp_controller.h"
 #include "p_monitor.h"
-#include "factory.h"
-#include "mem.h"
+#include "construction/factory.h"
+#include "runtime/mem.h"
 
 
 namespace r_exec {

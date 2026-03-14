@@ -7,7 +7,7 @@
 
 #include "dll.h"
 #include "list.h"
-#include "../object.h"
+#include "../runtime/object.h"
 #include "utils.h"
 
 namespace r_exec {

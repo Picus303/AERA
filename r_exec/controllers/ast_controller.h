@@ -4,7 +4,7 @@
 #define ast_controller_h
 
 #include "overlay.h"
-#include "factory.h"
+#include "construction/factory.h"
 #include "pattern_extractor.h"
 
 

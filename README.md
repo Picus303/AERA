@@ -12,6 +12,21 @@ What remains active today:
 - `usr_operators/`: native operators loaded by the runtime
 - `tests/`: smoke-test entry points
 
+Inside `r_exec/`, the active split is now responsibility-driven:
+- `attention/`
+- `bootstrap/`
+- `construction/`
+- `controllers/`
+- `diagnostics/`
+- `evaluation/`
+- `extensions/`
+- `learning/`
+- `metadata/`
+- `monitoring/`
+- `overlays/`
+- `runtime/`
+- `scheduling/`
+
 What has been deliberately removed from the active baseline:
 - Visual Studio solutions and project files
 - legacy docs and changelogs

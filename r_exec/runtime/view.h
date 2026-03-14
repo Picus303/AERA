@@ -3,7 +3,7 @@
 #ifndef view_h
 #define view_h
 
-#include "../r_code/object.h"
+#include "../../r_code/object.h"
 #include "dll.h"
 
 

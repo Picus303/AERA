@@ -1,9 +1,9 @@
 
 
 #include "ast_controller.h"
-#include "mem.h"
-#include "factory.h"
-#include "auto_focus.h"
+#include "runtime/mem.h"
+#include "construction/factory.h"
+#include "attention/auto_focus.h"
 
 
 namespace r_exec {

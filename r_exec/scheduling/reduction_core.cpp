@@ -1,7 +1,7 @@
 
 
 #include "reduction_core.h"
-#include "mem.h"
+#include "runtime/mem.h"
 #include "init.h"
 
 

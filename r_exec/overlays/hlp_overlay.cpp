@@ -3,7 +3,7 @@
 #include "hlp_overlay.h"
 #include "hlp_controller.h"
 #include "hlp_context.h"
-#include "mem.h"
+#include "runtime/mem.h"
 
 using namespace r_code;
 

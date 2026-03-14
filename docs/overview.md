@@ -17,9 +17,15 @@ The current responsibility split inside the app/runtime boundary is:
 - `AERA/bootstrap/`: process entry point and orchestration
 - `AERA/config/`: XML-backed runtime settings
 - `AERA/io/`: baseline `test_mem` implementation
+- `r_exec/attention/`: auto-focus and relevance selection logic
 - `r_exec/bootstrap/`: runtime bootstrap API
+- `r_exec/construction/`: factory types for runtime objects and markers
 - `r_exec/diagnostics/`: decompiler threads and debug sinks
+- `r_exec/evaluation/`: contexts, binding maps, and operators
 - `r_exec/extensions/`: callback/program/operator loading support
+- `r_exec/metadata/`: opcode registry and runtime metadata bindings
+- `r_exec/runtime/`: memory, groups, views, model base, and runtime object wrappers
+- `r_exec/scheduling/`: reduction/time cores and jobs
 
 The active execution flow is:
 

@@ -1,8 +1,8 @@
 
 
-#include "mem.h"
+#include "runtime/mem.h"
 #include "binding_map.h"
-#include "factory.h"
+#include "construction/factory.h"
 
 using namespace std::chrono;
 using namespace r_code;

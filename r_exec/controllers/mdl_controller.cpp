@@ -1,8 +1,8 @@
 
 
 #include "mdl_controller.h"
-#include "mem.h"
-#include "model_base.h"
+#include "runtime/mem.h"
+#include "runtime/model_base.h"
 
 using namespace std;
 using namespace std::chrono;

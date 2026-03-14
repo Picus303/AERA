@@ -2,9 +2,9 @@
 
 #include "pgm_overlay.h"
 #include "pgm_controller.h"
-#include "mem.h"
-#include "group.h"
-#include "opcodes.h"
+#include "runtime/mem.h"
+#include "runtime/group.h"
+#include "metadata/opcodes.h"
 #include "context.h"
 #include "callbacks.h"
 

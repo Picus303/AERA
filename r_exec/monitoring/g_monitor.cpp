@@ -1,9 +1,9 @@
 
 
 #include "g_monitor.h"
-#include "mem.h"
+#include "runtime/mem.h"
 #include "mdl_controller.h"
-#include "factory.h"
+#include "construction/factory.h"
 
 using namespace std::chrono;
 using namespace r_code;

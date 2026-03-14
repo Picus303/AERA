@@ -3,12 +3,12 @@
 #ifndef auto_focus_h
 #define auto_focus_h
 
-#include "../r_code/time_buffer.h"
+#include "../../r_code/time_buffer.h"
 
 #include "overlay.h"
-#include "group.h"
+#include "runtime/group.h"
 #include "pattern_extractor.h"
-#include "mem.h"
+#include "runtime/mem.h"
 
 
 namespace r_exec {

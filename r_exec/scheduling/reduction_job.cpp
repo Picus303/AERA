@@ -1,7 +1,7 @@
 
 
 #include "reduction_job.h"
-#include "mem.h"
+#include "runtime/mem.h"
 
 
 namespace r_exec {

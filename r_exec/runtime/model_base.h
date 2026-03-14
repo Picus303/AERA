@@ -3,7 +3,7 @@
 #ifndef model_base_h
 #define model_base_h
 
-#include "factory.h"
+#include "construction/factory.h"
 
 
 namespace r_exec {

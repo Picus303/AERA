@@ -1,9 +1,9 @@
 
 
-#include "auto_focus.h"
+#include "attention/auto_focus.h"
 #include "reduction_job.h"
-#include "mem.h"
-#include "model_base.h"
+#include "runtime/mem.h"
+#include "runtime/model_base.h"
 #include "hlp_context.h"
 #include "mdl_controller.h"
 

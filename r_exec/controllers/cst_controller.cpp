@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include "cst_controller.h"
-#include "mem.h"
+#include "runtime/mem.h"
 #include "hlp_context.h"
 
 using namespace std;

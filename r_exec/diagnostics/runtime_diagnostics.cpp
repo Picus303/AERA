@@ -7,7 +7,7 @@
 #include "../../r_code/utils.h"
 #include "decompiler.h"
 #include "init.h"
-#include "mem.h"
+#include "runtime/mem.h"
 
 using namespace std;
 

@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "mem.h"
+#include "runtime/mem.h"
 
 template<class O, class S> class TestMem :
   public r_exec::MemExec<O, S> {

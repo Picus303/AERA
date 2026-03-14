@@ -5,7 +5,7 @@
 
 #include "../r_code/atoms/atom.h"
 #include "../r_code/utils.h"
-#include "object.h"
+#include "runtime/object.h"
 #include "_context.h"
 #include "pgm_overlay.h"
 #include "operator.h"
