@@ -7,7 +7,8 @@ The current working setup on this machine is:
 - CMake
 - A Visual Studio installation with the C++ build tools
 - 32-bit MSVC environment loaded through `vcvars32.bat`
-- `NMake Makefiles` today, with automatic fallback to `Ninja` if it is present in `PATH`
+- `NMake Makefiles` as the current stable default
+- optional `Ninja`, but not yet the recommended path here
 
 ## Current Known-Good Smoke Test
 
@@ -17,7 +18,7 @@ The following scenario has been verified locally:
 - Build through CMake
 - Run `ctest`
 - Expected console output contains `hello world 1`
-- Expected output file `build\\smoke\\bin\\decompiled_objects.txt` is generated
+- Expected output file `build\\smoke\\<generator>\\bin\\decompiled_objects.txt` is generated
 - Expected decompiled output contains markers such as `root`, `stdin`, `stdout`, and `pgm0`
 
 ## Why This Is Documented
@@ -34,7 +35,8 @@ That script:
 
 - locates the installed MSVC toolchain with `vswhere`
 - loads the Visual Studio 32-bit build environment
-- configures CMake with `Ninja` if available, otherwise `NMake Makefiles`
+- configures CMake with `NMake Makefiles` by default
+- accepts `-Generator ninja` for explicit experiments with `Ninja`
 - builds the project through CMake
 - runs `ctest` and executes the smoke test
 
@@ -46,6 +48,7 @@ If the script fails early on a clean Windows machine, the likely missing tools a
 
 ## Current Limitations
 
+- `Ninja` is visible on this machine, but it currently stalls during the MSVC compiler ABI/link detection step in CMake
 - This is still a Windows-first build
 - The script is Windows-specific
 - The code still emits many warnings during build

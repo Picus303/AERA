@@ -41,8 +41,12 @@ That script configures, builds and smoke-tests the project through CMake. It wil
 
 * locate the local MSVC installation
 * load the 32-bit compiler environment required by the current codebase
-* use `Ninja` when available, otherwise `NMake Makefiles`
+* use `NMake Makefiles` by default
 * run `ctest` after the build
+
+For now, `Ninja` should be considered experimental on this codebase and machine. If you want to try it explicitly:
+
+    powershell -ExecutionPolicy Bypass -File tests\smoke_hello_world.ps1 -Generator ninja
 
 ## `WITH_DETAIL_OID`
 
@@ -56,9 +60,9 @@ If you want to run CMake manually instead of using the script, load the MSVC env
 
 Example with `NMake`:
 
-    cmake -S . -B build\smoke -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF
-    cmake --build build\smoke
-    ctest --test-dir build\smoke --output-on-failure
+    cmake -S . -B build\smoke\nmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF
+    cmake --build build\smoke\nmake
+    ctest --test-dir build\smoke\nmake --output-on-failure
 
 Run
 ===
@@ -67,7 +71,7 @@ After a successful build, the smoke test runs `AERA.exe` against a generated set
 
     0s:50ms:0us: hello world 1
 
-The executable is generated under `build\smoke\bin\AERA.exe`.
+The executable is generated under the selected build directory, for example `build\smoke\nmake\bin\AERA.exe`.
 
 # settings.xml
 

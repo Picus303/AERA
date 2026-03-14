@@ -1,7 +1,11 @@
+param(
+  [ValidateSet("nmake", "ninja", "auto")]
+  [string]$Generator = "nmake"
+)
+
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$buildDir = Join-Path $repoRoot "build\smoke"
 
 function Get-RequiredCommand {
   param(
@@ -53,15 +57,27 @@ function Invoke-VsCommand {
 
 $cmakePath = Get-RequiredCommand -Name "cmake"
 $vcVarsPath = Get-VcVars32Path
-$generator = if (Get-Command ninja -ErrorAction SilentlyContinue) { "Ninja" } else { "NMake Makefiles" }
+$selectedGenerator = switch ($Generator) {
+  "ninja" { "Ninja" }
+  "auto" {
+    if (Get-Command ninja -ErrorAction SilentlyContinue) {
+      "Ninja"
+    } else {
+      "NMake Makefiles"
+    }
+  }
+  default { "NMake Makefiles" }
+}
+$generatorKey = if ($selectedGenerator -eq "Ninja") { "ninja" } else { "nmake" }
+$buildDir = Join-Path $repoRoot "build\smoke\$generatorKey"
 
 if (!(Test-Path $buildDir)) {
   New-Item -ItemType Directory -Path $buildDir | Out-Null
 }
 
-Write-Host "Using generator: $generator"
+Write-Host "Using generator: $selectedGenerator"
 Write-Host "Configuring CMake"
-Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" -S `"$repoRoot`" -B `"$buildDir`" -G `"$generator`" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF"
+Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" -S `"$repoRoot`" -B `"$buildDir`" -G `"$selectedGenerator`" -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DAERA_ENABLE_PROTOBUF=OFF"
 
 Write-Host "Building"
 Invoke-VsCommand -VcVars $vcVarsPath -Command "`"$cmakePath`" --build `"$buildDir`""
