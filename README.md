@@ -42,4 +42,4 @@ powershell -ExecutionPolicy Bypass -File tests\smoke_hello_world.ps1
 
 The current supported runtime path is `test_mem`. The smoke test is the regression baseline while the repository is being restructured.
 
-See [overview](C:/Users/pille/Documents/GitHub/AERA/docs/overview.md) and [recovery-roadmap](C:/Users/pille/Documents/GitHub/AERA/docs/recovery-roadmap.md).
+See [overview](C:/Users/pille/Documents/GitHub/AERA/docs/overview.md), [recovery-roadmap](C:/Users/pille/Documents/GitHub/AERA/docs/recovery-roadmap.md), and [porting-guide](C:/Users/pille/Documents/GitHub/AERA/docs/porting-guide.md).
