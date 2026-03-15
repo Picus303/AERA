@@ -23,6 +23,7 @@ public:
 private:
   static std::unordered_map<std::string, Program> Programs_;
 public:
+  static void Clear();
   static void Register(const std::string &pgm_name, Program pgm);
   static Program Get(const std::string &pgm_name);
   static Controller *New(const std::string &pgm_name, r_code::_View *view);

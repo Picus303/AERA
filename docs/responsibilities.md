@@ -7,8 +7,9 @@ This pass treats separation of responsibilities as a hard architectural rule rat
 - `core/` owns shared infrastructure only.
 - `r_code/` owns low-level runtime data structures and serialization.
 - `r_comp/` owns Replicode parsing, preprocessing, metadata, and decompilation.
-- `r_exec/` owns runtime behavior only: execution, scheduling, controllers, monitoring, learning, diagnostics, and extension loading.
+- `r_exec/` owns runtime behavior only: execution, scheduling, controllers, monitoring, learning, diagnostics, and extension registration.
 - `AERA/` owns application bootstrap, runtime configuration, and the baseline IO device used by the smoke test.
+- `modules/` owns built-in operator/program/callback modules that plug into `r_exec` through explicit registrars.
 - `examples/` owns sample Replicode assets and should stay outside the runtime code folders.
 
 ## Active Structure
@@ -21,14 +22,15 @@ This pass treats separation of responsibilities as a hard architectural rule rat
 - `r_exec/construction/`: constructors and factories for markers, facts, simulations, and related runtime objects.
 - `r_exec/diagnostics/`: asynchronous decompilation and runtime trace sinks.
 - `r_exec/evaluation/`: operator contexts, binding maps, and expression evaluation support.
-- `r_exec/extensions/`: extension registries and shared-library bridge types.
+- `r_exec/extensions/`: extension registries and registration contracts.
 - `r_exec/metadata/`: opcode tables and runtime-wide symbolic identifiers.
 - `r_exec/runtime/`: long-lived runtime state such as memory, groups, views, object wrappers, and the model base.
 - `r_exec/scheduling/`: reduction and time scheduling primitives.
+- `modules/builtin/`: built-in operators, callbacks, and native programs registered in-process.
 
 ## Next Refactors
 
 1. Reduce transitive includes so headers expose only the types they really need.
 2. Add more characterization tests around compile/decompile and runtime output.
-3. Decide whether `usr_operators/` stays as a dynamic plugin boundary or moves in-process.
-4. Clean up historical comments and compiler warnings that now stand out clearly.
+3. Clean up historical comments and compiler warnings that now stand out clearly.
+4. Keep pushing platform-specific code toward explicit edge modules.

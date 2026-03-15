@@ -115,8 +115,7 @@ bool load_paths(const core::XMLNode& main_node, aera::RuntimeSettings& settings)
     return false;
   }
 
-  return read_string(load, "usr_operator_path", "Load", settings.load.usr_operator_path)
-    && read_string(load, "usr_class_path", "Load", settings.load.usr_class_path)
+  return read_string(load, "usr_class_path", "Load", settings.load.usr_class_path)
     && read_string(load, "source_file_name", "Load", settings.load.source_file_name);
 }
 

@@ -39,7 +39,7 @@ set(R_CODE_DIR "${AERA_ROOT_DIR}/r_code")
 set(R_COMP_DIR "${AERA_ROOT_DIR}/r_comp")
 set(R_EXEC_DIR "${AERA_ROOT_DIR}/r_exec")
 set(AERA_APP_DIR "${AERA_ROOT_DIR}/AERA")
-set(USR_OPERATORS_DIR "${AERA_ROOT_DIR}/usr_operators")
+set(MODULES_DIR "${AERA_ROOT_DIR}/modules")
 
 set(R_CODE_INCLUDE_DIRS
   "${R_CODE_DIR}"
@@ -77,6 +77,14 @@ set(AERA_APP_INCLUDE_DIRS
   "${AERA_APP_DIR}/io"
 )
 
+set(MODULE_INCLUDE_DIRS
+  "${MODULES_DIR}"
+  "${MODULES_DIR}/builtin"
+  "${MODULES_DIR}/builtin/callbacks"
+  "${MODULES_DIR}/builtin/operators"
+  "${MODULES_DIR}/builtin/programs"
+)
+
 add_library(aera_project_options INTERFACE)
 target_compile_features(aera_project_options INTERFACE cxx_std_17)
 target_include_directories(
@@ -86,6 +94,7 @@ target_include_directories(
     ${R_CODE_INCLUDE_DIRS}
     ${R_COMP_INCLUDE_DIRS}
     ${R_EXEC_INCLUDE_DIRS}
+    ${MODULE_INCLUDE_DIRS}
 )
 
 if(WIN32)
@@ -172,6 +181,11 @@ set(R_EXEC_SOURCES
   "${R_EXEC_DIR}/scheduling/reduction_job.cpp"
   "${R_EXEC_DIR}/scheduling/time_core.cpp"
   "${R_EXEC_DIR}/scheduling/time_job.cpp"
+  "${MODULES_DIR}/builtin/module.cpp"
+  "${MODULES_DIR}/builtin/callbacks/print_callback.cpp"
+  "${MODULES_DIR}/builtin/operators/spatial_operators.cpp"
+  "${MODULES_DIR}/builtin/programs/auto_focus_program.cpp"
+  "${MODULES_DIR}/builtin/programs/test_program.cpp"
 )
 
 add_library(r_exec SHARED ${R_EXEC_SOURCES})
@@ -179,26 +193,6 @@ target_link_libraries(r_exec PUBLIC aera_project_options CoreLibrary r_code r_co
 target_include_directories(r_exec PUBLIC ${R_EXEC_INCLUDE_DIRS})
 target_compile_definitions(r_exec PRIVATE EXECUTIVE_EXPORTS)
 set_target_properties(r_exec PROPERTIES OUTPUT_NAME "r_exec")
-
-set(USR_OPERATORS_SOURCES
-  "${USR_OPERATORS_DIR}/auto_focus_callback.cpp"
-  "${USR_OPERATORS_DIR}/usr_operators.cpp"
-  "${USR_OPERATORS_DIR}/Callbacks/callbacks.cpp"
-  "${USR_OPERATORS_DIR}/Operators/operators.cpp"
-  "${USR_OPERATORS_DIR}/TestProgram/test_program.cpp"
-)
-
-add_library(usr_operators SHARED ${USR_OPERATORS_SOURCES})
-target_link_libraries(usr_operators PRIVATE aera_project_options CoreLibrary r_code r_comp r_exec)
-target_include_directories(
-  usr_operators
-  PRIVATE
-    "${USR_OPERATORS_DIR}"
-    "${USR_OPERATORS_DIR}/Callbacks"
-    "${USR_OPERATORS_DIR}/Operators"
-    "${USR_OPERATORS_DIR}/TestProgram"
-)
-set_target_properties(usr_operators PROPERTIES OUTPUT_NAME "usr_operators")
 
 set(AERA_APP_SOURCES
   "${AERA_APP_DIR}/bootstrap/AERA_main.cpp"
@@ -211,11 +205,9 @@ add_executable(aera ${AERA_APP_SOURCES})
 target_link_libraries(aera PRIVATE aera_project_options CoreLibrary aera_config r_code r_comp r_exec)
 target_include_directories(aera PRIVATE "${AERA_APP_DIR}" ${AERA_APP_INCLUDE_DIRS})
 set_target_properties(aera PROPERTIES OUTPUT_NAME "AERA")
-add_dependencies(aera usr_operators)
 
 file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/examples/replicode/user.classes.replicode" AERA_SMOKE_USER_CLASSES)
 file(TO_CMAKE_PATH "${AERA_ROOT_DIR}/examples/replicode/main.replicode" AERA_SMOKE_SOURCE_FILE)
-set(AERA_SMOKE_USER_OPERATOR_FILENAME "${CMAKE_SHARED_LIBRARY_PREFIX}usr_operators${CMAKE_SHARED_LIBRARY_SUFFIX}")
 
 configure_file(
   "${AERA_ROOT_DIR}/cmake/smoke_settings.xml.in"
@@ -235,6 +227,20 @@ add_executable(
 )
 target_link_libraries(settings_characterization PRIVATE aera_project_options aera_config)
 target_include_directories(settings_characterization PRIVATE ${AERA_APP_INCLUDE_DIRS})
+
+add_executable(
+  builtin_module_characterization
+  "${AERA_ROOT_DIR}/tests/builtin_module_characterization.cpp"
+)
+target_link_libraries(
+  builtin_module_characterization
+  PRIVATE
+    aera_project_options
+    CoreLibrary
+    r_code
+    r_comp
+    r_exec
+)
 
 if(BUILD_TESTING)
   add_test(
@@ -259,6 +265,13 @@ if(BUILD_TESTING)
       "$<TARGET_FILE:settings_characterization>"
       invalid_missing_attribute
       "${CMAKE_BINARY_DIR}/invalid_settings.xml"
+  )
+
+  add_test(
+    NAME builtin_module_registration_contract
+    COMMAND
+      "$<TARGET_FILE:builtin_module_characterization>"
+      registration_contract
   )
 
   add_test(

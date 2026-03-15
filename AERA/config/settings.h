@@ -8,7 +8,6 @@
 namespace aera {
 
 struct LoadSettings {
-  std::string usr_operator_path;
   std::string usr_class_path;
   std::string source_file_name;
 };

@@ -123,5 +123,6 @@ public:
 };
 }
 
+#include "object.tpl.cpp"
 
 #endif

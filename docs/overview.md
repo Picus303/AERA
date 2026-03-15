@@ -7,10 +7,10 @@ The active architecture is:
 - `core/`: shared utility layer used by the rest of the codebase
 - `r_code/`: object model and low-level runtime representation
 - `r_comp/`: compiler and decompiler for Replicode sources
-- `r_exec/`: execution engine, memory, scheduling, monitoring, learning, diagnostics, and extension loading
+- `r_exec/`: execution engine, memory, scheduling, monitoring, learning, diagnostics, and extension registries
 - `AERA/`: executable bootstrap, runtime configuration, and baseline IO device
+- `modules/`: in-process extension modules registered during runtime bootstrap
 - `examples/`: Replicode scenarios used by the baseline
-- `usr_operators/`: dynamically loaded operators used by the runtime
 
 The current responsibility split inside the app/runtime boundary is:
 
@@ -22,16 +22,17 @@ The current responsibility split inside the app/runtime boundary is:
 - `r_exec/construction/`: factory types for runtime objects and markers
 - `r_exec/diagnostics/`: decompiler threads and debug sinks
 - `r_exec/evaluation/`: contexts, binding maps, and operators
-- `r_exec/extensions/`: callback/program/operator loading support
+- `r_exec/extensions/`: callback/program/operator registration support
 - `r_exec/metadata/`: opcode registry and runtime metadata bindings
 - `r_exec/runtime/`: memory, groups, views, model base, and runtime object wrappers
 - `r_exec/scheduling/`: reduction/time cores and jobs
+- `modules/builtin/`: built-in operators, callbacks, and C++ programs registered in-process
 
 The active execution flow is:
 
 1. Load `AERA/settings.xml`
-2. Load `usr_operators.dll`
-3. Compile `user.classes.replicode` and `main.replicode`
+2. Compile `user.classes.replicode` and initialize built-in extensions
+3. Compile `main.replicode`
 4. Create `test_mem`
 5. Load seed objects and run the runtime
 6. Export decompiled objects for inspection

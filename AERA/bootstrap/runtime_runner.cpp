@@ -126,21 +126,16 @@ core::int32 start_AERA(const char* file_name, const char* decompiled_file_name) 
   }
 
   cout << "> compiling ...\n";
-  r_exec::SharedFunctionLibrary user_operator_library;
-  if (!user_operator_library.load(settings.load.usr_operator_path.c_str()))
-    return 2;
-
   if (settings.execution.reduction_core_count == 0 && settings.execution.time_core_count == 0) {
     r_exec::_Mem::diagnostic_time_now_ = Time::Get();
     if (!r_exec::Init(
-      &user_operator_library,
       r_exec::_Mem::get_diagnostic_time_now,
       settings.load.usr_class_path.c_str())) {
       return 2;
     }
   }
   else {
-    if (!r_exec::Init(&user_operator_library, Time::Get, settings.load.usr_class_path.c_str()))
+    if (!r_exec::Init(Time::Get, settings.load.usr_class_path.c_str()))
       return 2;
   }
 

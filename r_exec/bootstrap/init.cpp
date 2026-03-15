@@ -1,15 +1,13 @@
 #include <algorithm>
-#include <cstdlib>
-#include <cstring>
 #include <fstream>
 #include <set>
 #include <sstream>
 
 #include "init.h"
 
+#include "builtin/module.h"
 #include "callbacks.h"
 #include "compiler.h"
-#include "controller.h"
 #include "cpp_programs.h"
 #include "runtime/mem.h"
 #include "runtime/object.h"
@@ -79,110 +77,62 @@ uint16 RetrieveOpcode(const char* name) {
   return _Opcodes.find(name)->second;
 }
 
-bool InitRuntime(FunctionLibrary* userOperatorLibrary,
-  Timestamp (*time_base)()) {
+class BootstrapExtensionRegistrar : public ExtensionRegistrar {
+public:
+  explicit BootstrapExtensionRegistrar(const unordered_map<std::string, uint16>& opcodes)
+    : opcodes_(opcodes) {}
 
-  Now = time_base;
+  void MarkUserDefinedOperatorClass(uint16 opcode) override {
 
-  if (!InitOpcodes(Metadata))
-    return false;
+    user_defined_operator_classes_.push_back(opcode);
+  }
 
-  if (!userOperatorLibrary)
-    return true;
+  bool RegisterOperator(const std::string& operator_name, OperatorFunction function) override {
 
-  typedef uint16 (*OpcodeRetriever)(const char*);
-  typedef r_code::resized_vector<uint16> (*UserInit)(OpcodeRetriever);
-  auto init_user_operators = (UserInit)userOperatorLibrary->getFunction("Init");
-  if (!init_user_operators)
-    return false;
-
-  typedef uint16 (*UserGetOperatorCount)();
-  auto get_operator_count = (UserGetOperatorCount)userOperatorLibrary->getFunction("GetOperatorCount");
-  if (!get_operator_count)
-    return false;
-
-  typedef void (*UserGetOperatorName)(char*);
-  auto get_operator_name = (UserGetOperatorName)userOperatorLibrary->getFunction("GetOperatorName");
-  if (!get_operator_name)
-    return false;
-
-  Metadata.usr_classes_ = init_user_operators(RetrieveOpcode);
-
-  typedef bool (*UserOperator)(const Context&);
-
-  uint16 operator_count = get_operator_count();
-  for (uint16 i = 0; i < operator_count; ++i) {
-
-    char op_name[256];
-    memset(op_name, 0, 256);
-    get_operator_name(op_name);
-
-    unordered_map<std::string, uint16>::iterator it = _Opcodes.find(op_name);
-    if (it == _Opcodes.end()) {
-
-      cerr << "Operator " << op_name << " is undefined" << endl;
-      exit(-1);
+    auto it = opcodes_.find(operator_name);
+    if (it == opcodes_.end()) {
+      cerr << "Operator " << operator_name << " is undefined" << endl;
+      return false;
     }
-    auto op = (UserOperator)userOperatorLibrary->getFunction(op_name);
-    if (!op)
-      return false;
 
-    Operator::Register(it->second, op);
+    Operator::Register(it->second, function);
+    return true;
   }
 
-  typedef uint16 (*UserGetProgramCount)();
-  auto get_program_count = (UserGetProgramCount)userOperatorLibrary->getFunction("GetProgramCount");
-  if (!get_program_count)
-    return false;
+  void RegisterProgram(const std::string& program_name, ProgramFactory program) override {
 
-  typedef void (*UserGetProgramName)(char*);
-  auto get_program_name = (UserGetProgramName)userOperatorLibrary->getFunction("GetProgramName");
-  if (!get_program_name)
-    return false;
-
-  typedef Controller* (*UserProgram)(_View*);
-
-  uint16 program_count = get_program_count();
-  for (uint16 i = 0; i < program_count; ++i) {
-
-    char pgm_name[256];
-    memset(pgm_name, 0, 256);
-    get_program_name(pgm_name);
-
-    auto pgm = (UserProgram)userOperatorLibrary->getFunction(pgm_name);
-    if (!pgm)
-      return false;
-
-    CPPPrograms::Register(pgm_name, pgm);
+    CPPPrograms::Register(program_name, program);
   }
 
-  typedef uint16 (*UserGetCallbackCount)();
-  auto get_callback_count = (UserGetCallbackCount)userOperatorLibrary->getFunction("GetCallbackCount");
-  if (!get_callback_count)
-    return false;
-
-  typedef void (*UserGetCallbackName)(char*);
-  auto get_callback_name = (UserGetCallbackName)userOperatorLibrary->getFunction("GetCallbackName");
-  if (!get_callback_name)
-    return false;
-
-  typedef bool (*UserCallback)(microseconds, bool, const char*, core::uint8, Code**);
-
-  uint16 callback_count = get_callback_count();
-  for (uint16 i = 0; i < callback_count; ++i) {
-
-    char callback_name[256];
-    memset(callback_name, 0, 256);
-    get_callback_name(callback_name);
-
-    auto callback = (UserCallback)userOperatorLibrary->getFunction(callback_name);
-    if (!callback)
-      return false;
+  void RegisterCallback(const std::string& callback_name, CallbackFunction callback) override {
 
     Callbacks::Register(callback_name, callback);
   }
 
-  cout << "> user-defined operator library loaded" << endl;
+  const r_code::resized_vector<uint16>& user_defined_operator_classes() const {
+
+    return user_defined_operator_classes_;
+  }
+
+private:
+  const unordered_map<std::string, uint16>& opcodes_;
+  r_code::resized_vector<uint16> user_defined_operator_classes_;
+};
+
+bool InitRuntime(Timestamp (*time_base)()) {
+
+  Now = time_base;
+
+  Callbacks::Clear();
+  CPPPrograms::Clear();
+  if (!InitOpcodes(Metadata))
+    return false;
+
+  BootstrapExtensionRegistrar registrar(_Opcodes);
+  if (!aera::builtin::RegisterModule(RetrieveOpcode, registrar))
+    return false;
+
+  Metadata.usr_classes_ = registrar.user_defined_operator_classes();
 
   return true;
 }
@@ -200,6 +150,9 @@ bool Compile(std::istream& source_code, const std::string& file_path, std::strin
 }
 
 bool InitOpcodes(const r_comp::Metadata& metadata) {
+  _Opcodes.clear();
+  Operator::Clear();
+
   unordered_map<uint16, set<string>> opcode_names;
   unordered_map<std::string, r_comp::Class>::const_iterator it;
   for (it = metadata.classes_.begin(); it != metadata.classes_.end(); ++it) {
@@ -331,8 +284,7 @@ bool InitOpcodes(const r_comp::Metadata& metadata) {
   return true;
 }
 
-bool Init(FunctionLibrary* userOperatorLibrary,
-  Timestamp (*time_base)(),
+bool Init(Timestamp (*time_base)(),
   const char* seed_path) {
 
   std::string error;
@@ -341,18 +293,17 @@ bool Init(FunctionLibrary* userOperatorLibrary,
     return false;
   }
 
-  return InitRuntime(userOperatorLibrary, time_base);
+  return InitRuntime(time_base);
 }
 
-bool Init(FunctionLibrary* userOperatorLibrary,
-  Timestamp (*time_base)(),
+bool Init(Timestamp (*time_base)(),
   const r_comp::Metadata& metadata,
   const r_comp::Image& seed) {
 
   Metadata = metadata;
   Seed = seed;
 
-  return InitRuntime(userOperatorLibrary, time_base);
+  return InitRuntime(time_base);
 }
 
 uint16 GetOpcode(const char* name) {

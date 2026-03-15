@@ -1,5 +1,4 @@
 
-
 #include "test_program.h"
 
 #include "runtime/mem.h"
@@ -43,7 +42,11 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////
 
-r_exec::Controller *test_program(r_code::_View *view) {
+namespace aera::builtin {
+
+r_exec::Controller* CreateTestProgram(r_code::_View* view) {
 
   return new TestController(view);
 }
+
+}  // namespace aera::builtin

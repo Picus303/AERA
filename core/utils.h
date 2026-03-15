@@ -14,7 +14,6 @@
 #include <sys/timeb.h>
 #include <time.h>
 #elif defined LINUX
-#include <dlfcn.h>
 #include <errno.h>
 #include <sys/utsname.h>
 #include <sys/time.h>
@@ -63,16 +62,6 @@ struct SemaTex {
   pthread_cond_t semaphore;
 };
 #endif
-
-class core_dll SharedLibrary {
-private:
-  shared_object library_;
-public:
-  SharedLibrary();
-  ~SharedLibrary();
-  SharedLibrary *load(const char *fileName);
-  void* getFunction(const char *functionName);
-};
 
 class core_dll Thread {
 private:

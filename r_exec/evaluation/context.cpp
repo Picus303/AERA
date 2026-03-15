@@ -659,7 +659,7 @@ bool IPGMContext::Fvw(const IPGMContext &context) {
     return false;
   }
 
-  View *v = (View *)_object->get_view(_group, true); // returns (a copy of: deprecated) of the view, if any.
+  View *v = (View *)_object->get_view(_group, true); // returns a heap-allocated copy of the view, if any.
   if (v) { // copy the view in the value array: code on VIEW_CODE_MAX_SIZE followed by 2 atoms holding raw pointers to grp and org.
 
     context.setCompoundResultHead(v->code(0));

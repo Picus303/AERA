@@ -83,7 +83,7 @@ pgm0:(pgm
       (fact p (+ after sampling_period) (+ before sampling_period) 1 1); The new position_y is a fact at some time as the starting position plus the sampling_period.
       [SYNC_PERIODIC (+ f.vw.ijt sampling_period) 1 1 stdin nil]; f.vw.ijt gets the inject time of the fact f.
    )
-   (prb [1 "print" "updated the position..." [p]]); Can be useful to change usr_operators\Callbacks\callbacks.cpp to print only objects[0]->code(3).asFloat()
+   (prb [1 "print" "updated the position..." [p]]); Can be useful to change modules\builtin\callbacks\print_callback.cpp to print only objects[0]->code(3).asFloat()
 1) |[]
 
 ; This program has ACTIVATION=1 and will thus run.

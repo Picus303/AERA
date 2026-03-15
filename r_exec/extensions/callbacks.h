@@ -23,6 +23,7 @@ public:
 private:
   static std::unordered_map<std::string, Callback> Callbacks_;
 public:
+  static void Clear();
   static void Register(const std::string& callback_name, Callback callback);
   static Callback Get(const std::string& callback_name);
 };

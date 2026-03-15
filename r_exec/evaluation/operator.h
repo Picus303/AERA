@@ -13,7 +13,7 @@
 namespace r_exec {
 
 // Wrapper class for evaluation contexts.
-// Template operator functions is not an option since some operators are defined in usr_operators.dll.
+// Template operator functions is not an option since some operators are registered at runtime.
 class dll_export Context {
 private:
   _Context *implementation_;
@@ -106,6 +106,7 @@ private:
   bool(*operator_)(const Context &);
   bool(*overload_)(const Context &);
 public:
+  static void Clear();
   static void Register(uint16 opcode, bool(*op)(const Context &)); // first, register std operators; next register user-defined operators (may be registered as overloads).
   static Operator Get(uint16 opcode) { return Operators_[opcode]; }
   Operator() : operator_(NULL), overload_(NULL) {}

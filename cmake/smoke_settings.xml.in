@@ -3,7 +3,6 @@
     io_device="test_mem"
   />
   <Load
-    usr_operator_path="./@AERA_SMOKE_USER_OPERATOR_FILENAME@"
     usr_class_path="@AERA_SMOKE_USER_CLASSES@"
     source_file_name="@AERA_SMOKE_SOURCE_FILE@"
   />

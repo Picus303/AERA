@@ -28,7 +28,7 @@ if(NOT run_exit_code EQUAL 0)
 endif()
 
 set(expected_console_markers
-  "usr operators initialized"
+  "builtin extension module registered"
   "running for 1000 ms in diagnostic time"
   "hello world 1"
 )

@@ -3,7 +3,6 @@
     io_device="test_mem"
   />
   <Load
-    usr_operator_path="./usr_operators.dll"
     usr_class_path="../examples/replicode/user.classes.replicode"
   />
   <Init

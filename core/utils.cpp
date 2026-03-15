@@ -9,9 +9,11 @@ using namespace std::chrono;
 #pragma intrinsic (_InterlockedDecrement)
 #pragma intrinsic (_InterlockedIncrement)
 #pragma intrinsic (_InterlockedExchange)
-#pragma intrinsic (_InterlockedExchange64)
 #pragma intrinsic (_InterlockedCompareExchange)
+#if defined ARCH_64
+#pragma intrinsic (_InterlockedExchange64)
 #pragma intrinsic (_InterlockedCompareExchange64)
+#endif
 #elif defined LINUX
 #endif
 
@@ -67,79 +69,6 @@ void Error::PrintBinary(void* p, uint32 size, bool asInt, const char* title) {
   }
   printf("\n");
 }
-
-SharedLibrary::SharedLibrary() : library_(NULL) {
-}
-
-SharedLibrary::~SharedLibrary() {
-#if defined WINDOWS
-  if (library_)
-    FreeLibrary(library_);
-#elif defined LINUX
-  if (library_)
-    dlclose(library_);
-#endif
-}
-
-SharedLibrary *SharedLibrary::load(const char *fileName) {
-#if defined WINDOWS
-  library_ = LoadLibrary(TEXT(fileName));
-  if (!library_) {
-
-    DWORD error = GetLastError();
-    std::cerr << "> Error: unable to load shared library " << fileName << " :" << error << std::endl;
-    return NULL;
-  }
-#elif defined LINUX
-  /*
-   * libraries on Linux are called 'lib<name>.so'
-   * if the passed in fileName does not have those
-   * components add them in.
-   */
-  char *libraryName = (char *)calloc(1, strlen(fileName) + 6 + 1);
-  if (strstr(fileName, "lib") == NULL) {
-    strcat(libraryName, "lib");
-  }
-  strcat(libraryName, fileName);
-  if (strstr(fileName + (strlen(fileName) - 3), ".so") == NULL) {
-    strcat(libraryName, ".so");
-  }
-  library_ = dlopen(libraryName, RTLD_NOW | RTLD_GLOBAL);
-  if (!library_) {
-    std::cout << "> Error: unable to load shared library " << fileName << " :" << dlerror() << std::endl;
-    free(libraryName);
-    return NULL;
-  }
-  free(libraryName);
-#endif
-  return this;
-}
-
-
-void* SharedLibrary::getFunction(const char* functionName) {
-  void* function = NULL;
-#if defined WINDOWS
-  if (library_) {
-
-    function = GetProcAddress(library_, functionName);
-    if (!function) {
-
-      DWORD error = GetLastError();
-      std::cerr << "GetProcAddress > Error: " << error << std::endl;
-    }
-  }
-#elif defined LINUX
-  if (library_) {
-    function = dlsym(library_, functionName);
-    if (!function) {
-      std::cout << "> Error: unable to find symbol " << functionName << " :" << dlerror() << std::endl;
-    }
-  }
-#endif
-  return function;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Thread::TerminateAndWait(Thread **threads, uint32 threadCount) {
   if (!threads)

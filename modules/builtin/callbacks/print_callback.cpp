@@ -1,18 +1,16 @@
 
-
 #include <sstream>
-#include "callbacks.h"
+#include "print_callback.h"
 
-#include "decompiler.h" // debug
 #include "runtime/mem.h"
 
 using namespace std;
 using namespace std::chrono;
 using namespace r_code;
 
-namespace usr_operators {
+namespace aera::builtin {
 
-bool print(microseconds relative_time, bool suspended, const char *msg, uint8 object_count, Code **objects) { // return true to resume the executive (applies when called from a suspend call, i.e. suspended==true).
+bool print(microseconds relative_time, bool suspended, const char* msg, core::uint8 object_count, Code** objects) { // return true to resume the executive (applies when called from a suspend call, i.e. suspended==true).
 
   ostringstream out;
   out << Utils::ToString_s_ms_us(Timestamp(relative_time), Timestamp(seconds(0))) << ": " << msg << std::endl;

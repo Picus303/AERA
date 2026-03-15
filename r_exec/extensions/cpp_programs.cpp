@@ -10,6 +10,11 @@ namespace r_exec {
 
 unordered_map<std::string, CPPPrograms::Program> CPPPrograms::Programs_;
 
+void CPPPrograms::Clear() {
+
+  Programs_.clear();
+}
+
 void CPPPrograms::Register(const std::string &pgm_name, Program pgm) {
 
   Programs_[pgm_name] = pgm;

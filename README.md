@@ -8,8 +8,8 @@ What remains active today:
 - `r_comp/`: Replicode compilation and decompilation
 - `r_exec/`: execution and reasoning runtime
 - `AERA/`: application entry point and baseline settings
+- `modules/`: built-in extension modules registered in-process
 - `examples/`: Replicode assets kept outside the app/runtime code
-- `usr_operators/`: native operators loaded by the runtime
 - `tests/`: smoke-test entry points
 
 Inside `r_exec/`, the active split is now responsibility-driven:

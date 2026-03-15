@@ -10,6 +10,11 @@ void *ImageImpl::operator new(size_t s, uint32 data_size) {
   return ::operator new(s);
 }
 
+void ImageImpl::operator delete(void *o, uint32 /* data_size */) {
+
+  ::operator delete(o);
+}
+
 void ImageImpl::operator delete(void *o) {
 
   ::operator delete(o);

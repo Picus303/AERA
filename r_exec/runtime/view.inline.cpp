@@ -26,7 +26,7 @@ inline View::View(const View *view, bool new_OID) : r_code::_View(), controller_
   memcpy(code_, view->code_, VIEW_CODE_MAX_SIZE * sizeof(Atom) + 2 * sizeof(r_code::Code *)); // reference_set is contiguous to code; memcpy in one go.
   if (new_OID)
     code_[VIEW_OID].atom_ = GetOID();
-  controller_ = NULL; // deprecated: controller=view->controller;
+  controller_ = NULL;
   reset();
 }
 

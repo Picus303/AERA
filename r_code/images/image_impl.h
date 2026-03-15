@@ -27,6 +27,7 @@ protected:
   word32 &data(uint32 i) const;
 public:
   void *operator new(size_t, uint32 data_size);
+  void operator delete(void *o, uint32 data_size);
   void operator delete(void *o);
   ImageImpl(Timestamp timestamp, uint32 map_size, uint32 code_size, uint32 names_size);
   ~ImageImpl();

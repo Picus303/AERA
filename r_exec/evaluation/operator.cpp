@@ -19,6 +19,11 @@ namespace r_exec {
 
 resized_vector<Operator> Operator::Operators_;
 
+void Operator::Clear() {
+
+  Operators_.clear();
+}
+
 void Operator::Register(uint16 opcode, bool(*o)(const Context &)) {
 
   if (Operators_[opcode].operator_)

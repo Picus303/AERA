@@ -27,7 +27,7 @@ P1:(pgm
    (ptn (fact m:(mk.val b: position pos: :) t: ::) [(= b ref_b) (> t ref_t) (<> pos ref_pos)])
 |[]; guards
 []; productions
-   (prb [1 "print" "P1" [pos]]); Can be useful to change usr_operators\Callbacks\callbacks.cpp to print only objects[0]->code(3).asFloat()
+   (prb [1 "print" "P1" [pos]]); Can be useful to change modules\builtin\callbacks\print_callback.cpp to print only objects[0]->code(3).asFloat()
    (inj []
       p:(mk.val b last_known m 1)
       |[]

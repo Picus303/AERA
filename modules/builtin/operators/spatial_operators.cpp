@@ -1,8 +1,6 @@
 
+#include "spatial_operators.h"
 
-#include "operators.h"
-
-#include "init.h"
 #include "runtime/mem.h"
 
 static uint16 Vec3Opcode;
@@ -10,7 +8,7 @@ static uint16 Vec2Opcode;
 static uint16 VecOpcode;
 static uint16 QuatOpcode;
 
-namespace usr_operators {
+namespace aera::builtin {
 
 using r_code::Atom;
 
@@ -380,19 +378,19 @@ bool dis(const r_exec::Context &context) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-}
+}  // namespace aera::builtin
 
-r_code::resized_vector<uint16> Operators::Init(OpcodeRetriever r) {
+r_code::resized_vector<uint16> aera::builtin::InitializeSpatialOperatorClasses(r_exec::OpcodeRetriever opcode_retriever) {
 
   const char* vec3 = "vec3";
   const char* vec2 = "vec2";
   const char* vec = "vec";
   const char* quat = "quat";
   r_code::resized_vector<uint16> initialized_opcodes;
-  initialized_opcodes.push_back(Vec3Opcode = r(vec3));
-  initialized_opcodes.push_back(Vec2Opcode = r(vec2));
-  initialized_opcodes.push_back(VecOpcode = r(vec));
-  initialized_opcodes.push_back(QuatOpcode = r(quat));
+  initialized_opcodes.push_back(Vec3Opcode = opcode_retriever(vec3));
+  initialized_opcodes.push_back(Vec2Opcode = opcode_retriever(vec2));
+  initialized_opcodes.push_back(VecOpcode = opcode_retriever(vec));
+  initialized_opcodes.push_back(QuatOpcode = opcode_retriever(quat));
 
   return initialized_opcodes;
 }
